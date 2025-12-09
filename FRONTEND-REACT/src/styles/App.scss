@@ -108,7 +108,11 @@ fieldset {
 .hero {
   margin-bottom: 3rem;
 }
+.landing {
+ grid-column: span 2;
+ text-align: center;
 
+}
 @media screen and (min-width: 768px) {
   .hero {
     grid-column: span 2;
