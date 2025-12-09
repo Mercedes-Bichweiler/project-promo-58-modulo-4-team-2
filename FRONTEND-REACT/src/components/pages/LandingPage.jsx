@@ -3,9 +3,8 @@ import { Link } from "react-router";
 function LandingPage() {
     return(
         <>
-        <h1>Landing</h1>
 
-        <Link  to="/create" className="start_button">
+        <Link  to="/create" className="button--link">
             Crear mi tarjeta
         </Link>
         </>
