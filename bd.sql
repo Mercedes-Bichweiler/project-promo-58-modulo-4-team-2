@@ -27,11 +27,8 @@ CREATE TABLE `autor` (
   `author` varchar(64) NOT NULL,
   `job` varchar(64) NOT NULL,
   `photo` longtext NOT NULL,
-  `proyectos_id` int NOT NULL,
-  PRIMARY KEY (`id`),
-  KEY `fk_autor_proyectos_idx` (`proyectos_id`),
-  CONSTRAINT `fk_autor_proyectos` FOREIGN KEY (`proyectos_id`) REFERENCES `proyectos` (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -40,7 +37,7 @@ CREATE TABLE `autor` (
 
 LOCK TABLES `autor` WRITE;
 /*!40000 ALTER TABLE `autor` DISABLE KEYS */;
-INSERT INTO `autor` VALUES (1,'Sofia Minaya','FullStack Dev','https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQ-uzogj29HaCj7Sh0GTMTMRNtZt0cPsJSx1g&s',1);
+INSERT INTO `autor` VALUES (1,'Sofia Minaya','FullStack dev','https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQ-uzogj29HaCj7Sh0GTMTMRNtZt0cPsJSx1g&s'),(4,'Esther Quirós','FullStack Dev','https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTr3yuixEjjSDBtSrmGUokMJd4OeD-8D8DSDQ&s');
 /*!40000 ALTER TABLE `autor` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -60,8 +57,11 @@ CREATE TABLE `proyectos` (
   `technologies` varchar(100) NOT NULL,
   `desc` varchar(1000) NOT NULL,
   `image` longtext NOT NULL,
-  PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+  `autor_id` int NOT NULL,
+  PRIMARY KEY (`id`,`autor_id`),
+  KEY `fk_proyectos_autor_idx` (`autor_id`),
+  CONSTRAINT `fk_proyectos_autor` FOREIGN KEY (`autor_id`) REFERENCES `autor` (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=8 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -70,7 +70,7 @@ CREATE TABLE `proyectos` (
 
 LOCK TABLES `proyectos` WRITE;
 /*!40000 ALTER TABLE `proyectos` DISABLE KEYS */;
-INSERT INTO `proyectos` VALUES (1,'bat-magotchi','bienvenido a bat-magotchi','https://github.com/s-minaya/bat-magotchi','https://adalab.es/','HTML CSS JavaScript','no dejes que tu bat-magotchi muera, para ello puedes darle de comer','https://img.freepik.com/vector-premium/pixel-murcielago-8-bits-animales-pixeles-activos-juegos-ilustracion-vectorial_614713-1430.jpg');
+INSERT INTO `proyectos` VALUES (1,'bat-magotchi','bienvenido a bat-magotchi','https://github.com/s-minaya/bat-magotchi','https://adalab.es/','HTML CSS JavaScript','No dejes que tu bat-magotchi muera, para ello puedes darle de comer','https://img.freepik.com/vector-premium/pixel-murcielago-8-bits-animales-pixeles-activos-juegos-ilustracion-vectorial_614713-1430.jpg\n',1),(7,'Harry Potter','Busca tu personaje favorito','https://github.com/Adalab/modulo-3-evaluacion-final-estherquiros.git','https://beta.adalab.es/modulo-3-evaluacion-final-estherquiros/','HTML SASS REACT','Encuentra cualquier personaje de la película utilizando filtros','https://www.ecured.cu/images/thumb/3/3b/Harry_potter_personaje.jpg/430px-Harry_potter_personaje.jpg',1);
 /*!40000 ALTER TABLE `proyectos` ENABLE KEYS */;
 UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
@@ -83,4 +83,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2025-12-11 12:59:49
+-- Dump completed on 2025-12-12 12:58:58
