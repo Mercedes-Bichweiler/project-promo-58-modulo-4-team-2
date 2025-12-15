@@ -1,0 +1,24 @@
+{
+  "name": "project-promo-58-modulo-4-team-2",
+  "version": "1.0.0",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node src/index.js",
+    "dev": "node --watch BACKEND/src/index.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Mercedes-Bichweiler/project-promo-58-modulo-4-team-2.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Mercedes-Bichweiler/project-promo-58-modulo-4-team-2/issues"
+  },
+  "homepage": "https://github.com/Mercedes-Bichweiler/project-promo-58-modulo-4-team-2#readme",
+  "description": "",
+  "dependencies": {
+    "express": "^5.2.1"
+  }
+}
