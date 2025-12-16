@@ -5,7 +5,7 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "start": "node src/index.js",
-    "dev": "node --watch BACKEND/src/index.js"
+    "dev": "node --watch src/index.js"
   },
   "repository": {
     "type": "git",
@@ -19,6 +19,7 @@
   "homepage": "https://github.com/Mercedes-Bichweiler/project-promo-58-modulo-4-team-2#readme",
   "description": "",
   "dependencies": {
+    "cors": "^2.8.5",
     "express": "^5.2.1"
   }
 }

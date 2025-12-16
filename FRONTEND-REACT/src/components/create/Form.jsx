@@ -117,9 +117,8 @@ function Form({ handleInputCard, cardData, setCardData, handleClick, cardURL, er
 
         <button className="button--large" onClick={handleClick}>Guardar proyecto</button>
         <p>{errorMsg}</p>
-      {cardURL !== "" && (
-        <a href={cardURL}>Pincha para ver tu tarjeta</a>
-      )}
+      {cardURL && (
+        <small> Proyecto guardado:<a href={cardURL} target="_blank" rel="noopener noreferrer">{cardURL}</a> </small>)}
         
       </fieldset>
     </form>
