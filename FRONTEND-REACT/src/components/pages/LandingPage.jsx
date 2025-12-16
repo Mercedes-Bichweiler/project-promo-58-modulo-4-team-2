@@ -35,8 +35,8 @@ function LandingPage() {
     },
   ]);
 
-  const getMoviesFromApi = () => {
-    console.log("Se están pidiendo las películas de la app");
+  const getProjectsFromApi = () => {
+    console.log("Se están pidiendo los proyectos de la app");
     // CAMBIA ESTE FETCH PARA QUE APUNTE A UN ENDPOINT DE TU SERVIDOR, PIENSA SI DEBE SER GET O POST, PIENSA QUÉ DATOS DEBES ENVIAR, ETC
     return fetch("//localhost:3000/api/projects")
       .then((response) => response.json())
@@ -50,11 +50,11 @@ function LandingPage() {
   };
   // eslint-disable-next-line no-unused-vars
   const objToExport = {
-    getMoviesFromApi: getMoviesFromApi,
+    getProjectsFromApi: getProjectsFromApi,
   };
 
   useEffect(() => {
-    getMoviesFromApi();
+    getProjectsFromApi();
   }, []);
 
   return (
