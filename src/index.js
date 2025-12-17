@@ -5,6 +5,9 @@ const express = require("express");
 
 const cors = require("cors");
 
+// Importamos mysql2
+const mysql2 = require("mysql2/promise");
+
 //const path = require("node:path"); //Esto va arriba del todo, con los otros require
 
 // create and config server
@@ -26,7 +29,7 @@ app.get("/", (req, res) => {
   res.send("ok!");
 });
 
-const data = [
+/*const data = [
   {
     id: 1,
     name: "bat-magotchi",
@@ -57,14 +60,43 @@ const data = [
     image:
       "https://www.ecured.cu/images/thumb/3/3b/Harry_potter_personaje.jpg/430px-Harry_potter_personaje.jpg",
   },
-];
+];*/
 
 // ENDPOINTS DEL API
-app.get("/api/projects", (req, res) => {
+app.get("/api/projects", async (req, res) => {
   console.log("GET /api/projects");
+  // 1. Conectamos con la bbdd
+  const datosConexion = {
+    host: "localhost",
+    port: 3306,
+    user: "root",
+    password: "0110",
+    database: "modulo",
+  };
+
+  const conn = await mysql2.createConnection(datosConexion);
+  await conn.connect();
+
+  // 2. Preparamos una query = SELECT
+  const querySelectProjects = `SELECT *
+FROM modulo.proyectos
+LEFT JOIN modulo.autor
+  ON modulo.autor.id = modulo.proyectos.autor_id;
+  `;
+
+  // 3. Lanzamos la query
+  const [resultados] = await conn.query(querySelectProjects);
+  console.log(resultados);
+
+  // 4. Cerramos la conexión
+
+  await conn.end();
+
+  // 5. Responder con los datos
+
   res.json({
     success: true,
-    projects: data,
+    projects: resultados,
   });
 });
 

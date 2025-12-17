@@ -9,7 +9,7 @@ function Card ({changeData}){
 
             <div className="card__author">
               <div className="card__authorPhoto" style={{
-          backgroundImage: changeData.image ? `url("${changeData.image}")`: null,
+          backgroundImage: changeData.photo ? `url("${changeData.photo}")`: null,
         }}></div>
               <p className="card__job">{changeData.job || 'Full stack Developer'}</p>
               <h3 className="card__name">{changeData.author || 'Emmelie Bjôrklund'}</h3>

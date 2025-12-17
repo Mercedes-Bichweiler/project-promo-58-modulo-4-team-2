@@ -8,7 +8,7 @@ function Preview({ cardData }) {
       <div
         className="projectImage"
         style={{
-          backgroundImage: cardData.photo ? `url(${cardData.photo})` : null,
+          backgroundImage: cardData.image ? `url(${cardData.image})` : null,
         }}
       ></div>
       <Card changeData={changeData} />

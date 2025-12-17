@@ -110,10 +110,10 @@ function Form({ handleInputCard, cardData, setCardData, handleClick, cardURL, er
       <fieldset className="addForm__group--upload">
         <GetAvatar
           text="Subir foto del proyecto"
-          updateAvatar={handleChangePhoto}
+          updateAvatar={handleChangeImage}
         />
 
-<GetAvatar text="Subir foto de la autora" updateAvatar={handleChangeImage} />
+        <GetAvatar text="Subir foto de la autora" updateAvatar={handleChangePhoto} />
 
         <button className="button--large" onClick={handleClick}>Guardar proyecto</button>
         <p>{errorMsg}</p>
