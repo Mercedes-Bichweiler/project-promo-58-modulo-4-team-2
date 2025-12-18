@@ -4,6 +4,10 @@ const express = require("express");
 // Importar la biblioteca de CORS
 
 const cors = require("cors");
+const path = require("node:path");
+
+// Importamos dotenv
+require("dotenv").config();
 
 // Importamos mysql2
 const mysql2 = require("mysql2/promise");
@@ -19,6 +23,19 @@ app.use(cors());
 
 app.use(express.json({ limit: "25Mb" }));
 
+const getConnection = async () => {
+  const datosConexion = {
+    host: process.env.MYSQL_HOST || "localhost",
+    port: process.env.MYSQL_PORT || 3306,
+    user: process.env.MYSQL_USER || "root",
+    password: process.env.MYSQL_PASSWORD || "pass",
+    database: process.env.MYSQL_SCHEMA || "modulo",
+  };
+  const conn = await mysql2.createConnection(datosConexion); // Crear la cajita de la conexión en el Workbench
+  await conn.connect(); // Hacer click en la cajita de la conex del Workbench
+  return conn;
+};
+
 // init express aplication
 const port = 3000;
 app.listen(port, () => {
@@ -29,53 +46,11 @@ app.get("/", (req, res) => {
   res.send("ok!");
 });
 
-/*const data = [
-  {
-    id: 1,
-    name: "bat-magotchi",
-    slogan: "bienvenido a bat-magotchi",
-    repo: "https://github.com/s-minaya/bat-magotchi",
-    demo: "https://adalab.es/",
-    technologies: "HTML CSS JavaScript",
-    desc: "No dejes que tu bat-magotchi muera, para ello puedes darle de comer",
-    author: "Sofia Minaya",
-    job: "FullStack dev",
-    photo:
-      "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQ-uzogj29HaCj7Sh0GTMTMRNtZt0cPsJSx1g&s",
-    image:
-      "https://img.freepik.com/vector-premium/pixel-murcielago-8-bits-animales-pixeles-activos-juegos-ilustracion-vectorial_614713-1430.jpg",
-  },
-  {
-    id: 2,
-    name: "Harry Potter",
-    slogan: "Busca tu personaje favorito",
-    repo: "https://github.com/Adalab/modulo-3-evaluacion-final-estherquiros.git",
-    demo: "https://beta.adalab.es/modulo-3-evaluacion-final-estherquiros/",
-    technologies: "HTML SASS REACT",
-    desc: "Encuentra cualquier personaje de la película utilizando filtros",
-    author: "Esther Quirós",
-    job: "FullStack Dev",
-    photo:
-      "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTr3yuixEjjSDBtSrmGUokMJd4OeD-8D8DSDQ&s",
-    image:
-      "https://www.ecured.cu/images/thumb/3/3b/Harry_potter_personaje.jpg/430px-Harry_potter_personaje.jpg",
-  },
-];*/
-
 // ENDPOINTS DEL API
 app.get("/api/projects", async (req, res) => {
   console.log("GET /api/projects");
   // 1. Conectamos con la bbdd
-  const datosConexion = {
-    host: "localhost",
-    port: 3306,
-    user: "root",
-    password: "0110",
-    database: "modulo",
-  };
-
-  const conn = await mysql2.createConnection(datosConexion);
-  await conn.connect();
+  const conn = await getConnection();
 
   // 2. Preparamos una query = SELECT
   const querySelectProjects = `SELECT *
@@ -100,46 +75,70 @@ LEFT JOIN modulo.autor
   });
 });
 
-app.post("/api/project", (req, res) => {
+app.post("/api/project", async (req, res) => {
   console.log("POST /api/project");
 
-  // Los datos del body del fetch llegan en la variable req.body:
-
-  console.log(req.body);
-
-  // Comprobamos si en el objeto con los datos llega un nombre.
-
-  // Si no, devolvemos success: false y un código de respuesta de error,
-
-  //   y fin de la función del endpoint (por el return):
-
-  if (req.body.name === undefined || req.body.name === "") {
-    return res.status(400).json({ success: false, error: "Falta el nombre" });
+  if (!req.body.name) {
+    return res.status(400).json({
+      success: false,
+      error: "Falta el nombre",
+    });
   }
 
-  // Comprobamos si en el objeto con los datos llega una descripción.
-
-  // Si no, devolvemos success: false y un código de respuesta de error,
-
-  //   y fin de la función del endpoint (por el return):
-
-  if (req.body.desc === undefined || req.body.desc === "") {
-    return res
-
-      .status(400)
-
-      .json({ success: false, error: "Falta la descripción" });
+  if (!req.body.desc) {
+    return res.status(400).json({
+      success: false,
+      error: "Falta la descripción",
+    });
   }
 
-  // Parece que los datos recibidos tienen título y descripción.
+  const conn = await getConnection();
 
-  // Almacenamos el objeto recibido en nuestro array de objetos:
+  try {
+    const insertAuthor = `
+      INSERT INTO autor (author, job, photo)
+      VALUES (?, ?, ?);
+    `;
 
-  data.push(req.body);
+    const [resultInsertAuthor] = await conn.execute(insertAuthor, [
+      req.body.author,
+      req.body.job,
+      req.body.photo,
+    ]);
 
-  // Devolvemos como respuesta un success: true.
+    const insertProject = `
+      INSERT INTO proyectos 
+      (name, slogan, repo, demo, technologies, \`desc\`, image, autor_id)
+      VALUES (?, ?, ?, ?, ?, ?, ?, ?);
+    `;
 
-  res.status(200).json({ success: true });
+    const [resultInsertProject] = await conn.execute(insertProject, [
+      req.body.name,
+      req.body.slogan,
+      req.body.repo,
+      req.body.demo,
+      req.body.technologies,
+      req.body.desc,
+      req.body.image,
+      resultInsertAuthor.insertId,
+    ]);
+
+    await conn.end();
+
+    res.json({
+      success: true,
+      cardURL: `http://localhost:3000/project/${resultInsertProject.insertId}`,
+    });
+  } catch (error) {
+    console.error(error);
+
+    await conn.end();
+
+    res.status(500).json({
+      success: false,
+      error: "Error en la base de datos",
+    });
+  }
 });
 
 // SERVIDOR DE FICHEROS DINAMICOS
