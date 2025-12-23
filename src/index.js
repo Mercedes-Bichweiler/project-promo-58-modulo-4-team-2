@@ -38,7 +38,7 @@ const getConnection = async () => {
 };
 
 // init express aplication
-const port = 3000;
+const port = process.env.MYSQL_PORT || 3000;
 app.listen(port, () => {
   console.log(`El servidor está arrancado: http://localhost:${port}`);
 });
