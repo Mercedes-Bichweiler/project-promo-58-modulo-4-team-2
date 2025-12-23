@@ -7,8 +7,12 @@ function ProjectDetail() {
   const navigate = useNavigate();
   const [project, setProject] = useState(null);
 
+  const server = import.meta.env.PROD
+    ? 'https://project-promo-58-modulo-4-team-2.onrender.com'
+    : 'http://localhost:3000';
+
   useEffect(() => {
-    fetch(`http://localhost:3000/api/projects/${id}`)
+    fetch(`${server}/api/projects/${id}`)
       .then((res) => res.json())
       .then((data) => {
         if (data.success) {
@@ -27,7 +31,8 @@ return (
       <button
         className="button--link"
         onClick={() => navigate("/")}
-      >Volver al listado
+      >
+Volver al listado
       </button>
     </div>
 

@@ -15,6 +15,10 @@ function Form({
 }) {
   const navigate = useNavigate();
 
+  const server = import.meta.env.PROD
+    ? 'https://project-promo-58-modulo-4-team-2.onrender.com'
+    : 'http://localhost:3000';
+
   const handleChangePhoto = (photoData) => {
     setCardData({
       ...cardData,
@@ -36,7 +40,7 @@ function Form({
     setProjectId(null);
     setErrorMsg("");
 
-    fetch("http://localhost:3000/api/project", {
+    fetch(`${server}/api/project`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(cardData),

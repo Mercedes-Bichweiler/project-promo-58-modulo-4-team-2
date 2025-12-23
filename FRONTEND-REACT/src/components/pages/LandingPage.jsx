@@ -35,10 +35,14 @@ function LandingPage() {
     },
   ]);
 
+  const server = import.meta.env.PROD
+    ? 'https://project-promo-58-modulo-4-team-2.onrender.com'
+    : 'http://localhost:3000';
+
   const getProjectsFromApi = () => {
     console.log("Se están pidiendo los proyectos de la app");
 
-    return fetch("//localhost:3000/api/projects")
+    return fetch(`${server}/api/projects`)
       .then((response) => response.json())
       .then((data) => {
         setProjects(data.projects);
