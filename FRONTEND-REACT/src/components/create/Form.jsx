@@ -11,6 +11,7 @@ function Form({
   setProjectId,
   errorMsg,
   setErrorMsg,
+  handleResetForm,
 }) {
   const navigate = useNavigate();
 
@@ -153,6 +154,10 @@ function Form({
 
         <button className="button--large" type="submit">
           Guardar proyecto
+        </button>
+
+        <button className="button--large" type="button" onClick={handleResetForm}>
+          Limpiar formulario
         </button>
 
         {projectId && (

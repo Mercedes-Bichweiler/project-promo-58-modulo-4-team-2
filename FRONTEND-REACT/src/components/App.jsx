@@ -54,6 +54,25 @@ function App() {
     });
   };
 
+  const handleResetForm = () => {
+    const initialData = {
+      name: "",
+      slogan: "",
+      repo: "",
+      demo: "",
+      technologies: "",
+      desc: "",
+      author: "",
+      job: "",
+      photo: "",
+      image: "",
+    };
+    setCardData(initialData);
+    setProjectId(null);
+    setErrorMsg("");
+    localStorage.removeItem("form-backup");
+  };
+
   return (
     <div className="container">
       <Header />
@@ -79,6 +98,7 @@ function App() {
                   setProjectId={setProjectId}
                   errorMsg={errorMsg}
                   setErrorMsg={setErrorMsg}
+                  handleResetForm={handleResetForm}
                 />
               </>
             }
