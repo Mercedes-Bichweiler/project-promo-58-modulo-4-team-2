@@ -43,10 +43,6 @@ app.listen(port, () => {
   console.log(`El servidor está arrancado: http://localhost:${port}`);
 });
 
-app.get("/", (req, res) => {
-  res.send("ok!");
-});
-
 // ENDPOINTS DEL API
 app.get("/api/projects", async (req, res) => {
   console.log("GET /api/projects");
@@ -202,3 +198,7 @@ app.get("/api/projects/:id", async (req, res) => {
 app.use(express.static(path.join(__dirname, "..", "frontend-static")));
 
 //app.use(express.static(path.join(__dirname, "..", "FRONTEND-REACT", "dist"))); // Importante el dist aqui
+
+app.get(/.*/, (req, res) => {
+  res.sendFile(path.join(__dirname, "..", "frontend-static", "index.html"));
+});
