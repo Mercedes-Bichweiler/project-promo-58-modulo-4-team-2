@@ -38,7 +38,7 @@ const getConnection = async () => {
 };
 
 // init express aplication
-const port = process.env.MYSQL_PORT || 3000;
+const port = process.env.PORT || 3000;
 app.listen(port, () => {
   console.log(`El servidor está arrancado: http://localhost:${port}`);
 });
@@ -196,9 +196,9 @@ app.get("/api/projects/:id", async (req, res) => {
 });
 
 // SERVIDOR DE FICHEROS DINAMICOS
-app.use(express.static(path.join(__dirname, "..", "views_static")));
+//app.use(express.static(path.join(__dirname, "..", "views_static")));
 
 // SERVIDOR DE FICHEROS ESTÁTICOS
-app.use(express.static(path.join(__dirname, "..", "frontend_static")));
+app.use(express.static(path.join(__dirname, "..", "frontend-static")));
 
 //app.use(express.static(path.join(__dirname, "..", "FRONTEND-REACT", "dist"))); // Importante el dist aqui
