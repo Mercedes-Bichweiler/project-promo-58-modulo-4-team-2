@@ -22,6 +22,7 @@ const app = express();
 app.use(cors());
 
 app.use(express.json({ limit: "25Mb" }));
+app.set("view engine", "ejs");
 
 const getConnection = async () => {
   const datosConexion = {
@@ -53,11 +54,22 @@ app.get("/api/projects", async (req, res) => {
   const conn = await getConnection();
 
   // 2. Preparamos una query = SELECT
-  const querySelectProjects = `SELECT *
+  const querySelectProjects = `SELECT
+  proyectos.id AS project_id,
+  proyectos.name,
+  proyectos.slogan,
+  proyectos.repo,
+  proyectos.demo,
+  proyectos.technologies,
+  proyectos.\`desc\`,
+  proyectos.image,
+  autor.author,
+  autor.job,
+  autor.photo
 FROM modulo.proyectos
 LEFT JOIN modulo.autor
-  ON modulo.autor.id = modulo.proyectos.autor_id;
-  `;
+  ON autor.id = proyectos.autor_id;
+`;
 
   // 3. Lanzamos la query
   const [resultados] = await conn.query(querySelectProjects);
@@ -141,8 +153,52 @@ app.post("/api/project", async (req, res) => {
   }
 });
 
+app.get("/api/projects/:id", async (req, res) => {
+  if (isNaN(parseInt(req.params.id))) {
+    return res.status(500).json({
+      success: false,
+      error: "No es un ID válido",
+    });
+  }
+
+  // 1. Conectarse a la base de datos.
+  const conn = await getConnection();
+
+  // 2. Preparar sentencia SQL (query).
+  const selectOneProject = `
+  SELECT *
+  FROM modulo.proyectos
+  LEFT JOIN modulo.autor
+    ON modulo.autor.id = modulo.proyectos.autor_id
+  WHERE modulo.proyectos.id = ?;
+`;
+
+  // 3. Lanzar la sentencia SQL y obtener los resultados.
+  const [results] = await conn.query(selectOneProject, [req.params.id]);
+
+  // 4. Cerrar la conexión con la base de datos.
+  await conn.end();
+
+  // 5. Devolver la información.
+  if (results.length === 0) {
+    return res.status(404).json({
+      success: false,
+      error: "Proyecto no encontrado",
+    });
+  }
+
+  const [foundProyect] = results;
+
+  res.json({
+    success: true,
+    data: foundProyect,
+  });
+});
+
 // SERVIDOR DE FICHEROS DINAMICOS
+app.use(express.static(path.join(__dirname, "..", "views_static")));
 
 // SERVIDOR DE FICHEROS ESTÁTICOS
+app.use(express.static(path.join(__dirname, "..", "frontend_static")));
 
 //app.use(express.static(path.join(__dirname, "..", "FRONTEND-REACT", "dist"))); // Importante el dist aqui

@@ -1,50 +1,77 @@
-function Card ({changeData}){
-    return(
-        <article className="card">
-            <h2 className="card__projectTitle">
-              <span className="card__projectTitle--text">
-                Personal project card
-              </span>
-            </h2>
+import { useNavigate } from "react-router";
+import { Link } from "react-router";
 
-            <div className="card__author">
-              <div className="card__authorPhoto" style={{
-          backgroundImage: changeData.photo ? `url("${changeData.photo}")`: null,
-        }}></div>
-              <p className="card__job">{changeData.job || 'Full stack Developer'}</p>
-              <h3 className="card__name">{changeData.author || 'Emmelie Bjôrklund'}</h3>
-            </div>
+function Card({ changeData }) {
+  const navigate = useNavigate();
 
-            <div className="card__project">
-              <h3 className="card__name">{changeData.name || 'Elegant Workspace'}</h3>
-              <p className="card__slogan">{changeData.slogan || 'Diseños Exclusivos'}</p>
-              <h3 className="card__descriptionTitle">Product description</h3>
-              <p className="card__description">{changeData.desc || 'Lorem ipsum dolor, sit amet consectetur adipisicing elit. Nulla, quos? Itaque, molestias eveniet laudantium adipisci vitae ratione'}</p>
+  const handleCardClick = () => {
+    navigate(`/project/${changeData.id}`);
+  };
 
-              <div className="card__technicalInfo">
-                <p className="card__technologies">{changeData.technologies || 'React JS - HTML - CSS'}</p>
+  const handleLinkClick = (ev) => {
+    ev.stopPropagation();
+  };
 
-                <a
-                  className="icon icon__www"
-                  href={changeData.demo}
-                  title="Haz click para ver el proyecto online"
-                >
-                  {changeData.demo}
-                </a>
-                <a
-                  className="icon icon__github"
-                  href={changeData.repo}
-                  title="Haz click para ver el código del proyecto"
-                >
-                  {changeData.repo}
-                </a>
-              </div>
-            </div>
-          </article>
-    );
+  return (
+    <article
+      className="card"
+      onClick={handleCardClick}
+      style={{ cursor: "pointer" }}
+    >
+      <h2 className="card__projectTitle">
+        <span className="card__projectTitle--text">Personal project card</span>
+      </h2>
+
+      <div className="card__author">
+        <div
+          className="card__authorPhoto"
+          style={{
+            backgroundImage: changeData.photo
+              ? `url("${changeData.photo}")`
+              : null,
+          }}
+        ></div>
+        <p className="card__job">{changeData.job || "Full stack Developer"}</p>
+        <h3 className="card__name">
+          {changeData.author || "Emmelie Bjôrklund"}
+        </h3>
+      </div>
+
+      <div className="card__project">
+        <h3 className="card__name">{changeData.name || "Elegant Workspace"}</h3>
+        <p className="card__slogan">
+          {changeData.slogan || "Diseños Exclusivos"}
+        </p>
+
+        <h3 className="card__descriptionTitle">Product description</h3>
+        <p className="card__description">
+          {changeData.desc || "Lorem ipsum dolor sit amet..."}
+        </p>
+
+        <div className="card__technicalInfo">
+          <p className="card__technologies">
+            {changeData.technologies || "React JS - HTML - CSS"}
+          </p>
+
+          <a
+            className="icon icon__www"
+            href={changeData.demo}
+            onClick={handleLinkClick}
+            target="_blank"
+            rel="noopener noreferrer"
+          />
+
+          <a
+            className="icon icon__github"
+            href={changeData.repo}
+            onClick={handleLinkClick}
+            target="_blank"
+            rel="noopener noreferrer"
+          />
+        </div>
+      </div>
+    </article>
+  );
 }
 
-export default Card
-
-
-
+export default Card;

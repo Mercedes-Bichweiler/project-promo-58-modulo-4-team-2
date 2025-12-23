@@ -37,13 +37,10 @@ function LandingPage() {
 
   const getProjectsFromApi = () => {
     console.log("Se están pidiendo los proyectos de la app");
-    // CAMBIA ESTE FETCH PARA QUE APUNTE A UN ENDPOINT DE TU SERVIDOR, PIENSA SI DEBE SER GET O POST, PIENSA QUÉ DATOS DEBES ENVIAR, ETC
+
     return fetch("//localhost:3000/api/projects")
       .then((response) => response.json())
       .then((data) => {
-        // CAMBIA EL CONTENIDO DE ESTE THEN PARA GESTIONAR LA RESPUESTA DEL SERVIDOR Y RETORNAR AL COMPONENTE APP LO QUE NECESITA
-        console.log(data);
-        
         setProjects(data.projects);
         return data;
       });
@@ -65,7 +62,10 @@ function LandingPage() {
         </Link>
         Listado de proyectos
         {projects.map((project) => (
-          <Card key={project.id} changeData={project}></Card>
+          <Card
+            key={project.project_id}
+            changeData={{ ...project, id: project.project_id }}
+          />
         ))}
       </section>
     </>

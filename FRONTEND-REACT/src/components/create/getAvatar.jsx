@@ -2,6 +2,7 @@ import React from "react";
 import defaultAvatar from "../../images/avatar.webp";
 
 function GetAvatar({
+  // eslint-disable-next-line no-unused-vars
   avatar = defaultAvatar,
   updateAvatar,
   text = "Get avatar!",

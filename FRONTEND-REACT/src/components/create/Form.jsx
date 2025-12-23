@@ -1,24 +1,57 @@
-
+/* eslint-disable no-unused-vars */
+import { useNavigate } from "react-router";
 import GetAvatar from "./getAvatar";
 
-function Form({ handleInputCard, cardData, setCardData, handleClick, cardURL, errorMsg }) {
+// eslint-disable-next-line no-unused-vars
+function Form({
+  handleInputCard,
+  cardData,
+  setCardData,
+  projectId,
+  setProjectId,
+  errorMsg,
+  setErrorMsg,
+}) {
+  const navigate = useNavigate();
 
   const handleChangePhoto = (photoData) => {
-      setCardData({
+    setCardData({
       ...cardData,
       photo: photoData,
     });
   };
 
-  const handleChangeImage= (imageData) => {
+  const handleChangeImage = (imageData) => {
     setCardData({
       ...cardData,
       image: imageData,
     });
-  }
+  };
 
   const handleSubmit = (ev) => {
     ev.preventDefault();
+
+    // Limpiar id anterior y errores
+    setProjectId(null);
+    setErrorMsg("");
+
+    fetch("http://localhost:3000/api/project", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(cardData),
+    })
+      .then((res) => res.json())
+      .then((data) => {
+        if (data.success) {
+          const id = data.cardURL.split("/").pop();
+          setProjectId(id);
+          setErrorMsg("");
+        } else {
+          setErrorMsg(data.error || "Error al guardar proyecto");
+        }
+      })
+      // eslint-disable-next-line no-unused-vars
+      .catch((err) => setErrorMsg("Error al conectar con el servidor"));
   };
 
   return (
@@ -113,13 +146,27 @@ function Form({ handleInputCard, cardData, setCardData, handleClick, cardURL, er
           updateAvatar={handleChangeImage}
         />
 
-        <GetAvatar text="Subir foto de la autora" updateAvatar={handleChangePhoto} />
+        <GetAvatar
+          text="Subir foto de la autora"
+          updateAvatar={handleChangePhoto}
+        />
 
-        <button className="button--large" onClick={handleClick}>Guardar proyecto</button>
-        <p>{errorMsg}</p>
-      {cardURL && (
-        <small> Proyecto guardado:<a href={cardURL} target="_blank" rel="noopener noreferrer">{cardURL}</a> </small>)}
-        
+        <button className="button--large" type="submit">
+          Guardar proyecto
+        </button>
+
+        {projectId && (
+          <small>
+            Proyecto guardado:{" "}
+            <button
+              className="button--link"
+              type="button"
+              onClick={() => navigate(`/project/${projectId}`)}
+            >
+              Ver proyecto
+            </button>
+          </small>
+        )}
       </fieldset>
     </form>
   );

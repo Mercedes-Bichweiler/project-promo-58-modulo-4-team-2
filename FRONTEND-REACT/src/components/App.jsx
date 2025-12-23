@@ -10,11 +10,10 @@ import Preview from "./create/Preview";
 import Form from "./create/Form";
 
 import LandingPage from "./pages/LandingPage";
+import ProjectDetail from "./pages/ProjectDetail";
 
 import { useState, useEffect } from "react";
 import { Routes, Route } from "react-router";
-
-
 
 function App() {
   const [cardData, setCardData] = useState({
@@ -30,14 +29,14 @@ function App() {
     image: "",
   });
 
-  const [cardURL, setCardURL] = useState("");
+  const [projectId, setProjectId] = useState(null);
   const [errorMsg, setErrorMsg] = useState("");
 
-    //evita que desaparezca lo escrito al recargar la página
+  //evita que desaparezca lo escrito al recargar la página
   useEffect(() => {
     const savedData = localStorage.getItem("form-backup");
 
-    if(savedData) {
+    if (savedData) {
       // eslint-disable-next-line react-hooks/set-state-in-effect
       setCardData(JSON.parse(savedData));
     }
@@ -55,31 +54,6 @@ function App() {
     });
   };
 
-  const handleClick = () => {
-    fetch('http://localhost:3000/api/project', {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(cardData),
-    })
-      .then((res) => res.json())
-      .then((responseData) => {
-        if (responseData.success) {
-          const cardURL = responseData.cardURL;
-          setCardURL(cardURL);
-          setErrorMsg("");
-          console.log(cardURL);
-        } else {
-          setErrorMsg(responseData.error);
-          setCardURL("");
-        }
-      })
-      .catch((error) => {
-        console.error("Error en la petición:", error);
-      });
-  };
-
   return (
     <div className="container">
       <Header />
@@ -87,6 +61,8 @@ function App() {
         <Routes>
           {/*ruta para la landing*/}
           <Route path="/" element={<LandingPage />} />
+          {/*ruta para el detalle*/}
+          <Route path="/project/:id" element={<ProjectDetail />} />
 
           {/*ruta para crear la tarjeta*/}
           <Route
@@ -99,9 +75,10 @@ function App() {
                   handleInputCard={handleInputCard}
                   cardData={cardData}
                   setCardData={setCardData}
-                  handleClick={handleClick}
-                  cardURL={cardURL}
+                  projectId={projectId}
+                  setProjectId={setProjectId}
                   errorMsg={errorMsg}
+                  setErrorMsg={setErrorMsg}
                 />
               </>
             }
@@ -114,4 +91,3 @@ function App() {
 }
 
 export default App;
-
