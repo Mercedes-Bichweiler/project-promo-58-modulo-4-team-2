@@ -62,8 +62,8 @@ app.get("/api/projects", async (req, res) => {
   autor.author,
   autor.job,
   autor.photo
-FROM modulo.proyectos
-LEFT JOIN modulo.autor
+FROM proyectos
+LEFT JOIN autor
   ON autor.id = proyectos.autor_id;
 `;
 
@@ -163,10 +163,10 @@ app.get("/api/projects/:id", async (req, res) => {
   // 2. Preparar sentencia SQL (query).
   const selectOneProject = `
   SELECT *
-  FROM modulo.proyectos
-  LEFT JOIN modulo.autor
-    ON modulo.autor.id = modulo.proyectos.autor_id
-  WHERE modulo.proyectos.id = ?;
+  FROM proyectos
+  LEFT JOIN autor
+    ON autor.id = proyectos.autor_id
+  WHERE proyectos.id = ?;
 `;
 
   // 3. Lanzar la sentencia SQL y obtener los resultados.
